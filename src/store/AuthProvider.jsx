@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AuthContext } from './authContext';
-import {createUserWithEmailAndPassword ,GoogleAuthProvider,signInWithEmailAndPassword,signInWithPopup} from 'firebase/auth';
+import {createUserWithEmailAndPassword ,GoogleAuthProvider,onAuthStateChanged,signInWithEmailAndPassword,signInWithPopup} from 'firebase/auth';
 import {auth} from '../firebase/firebase'
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -11,6 +11,16 @@ function AuthProvider({children}) {
     const [user,setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
+
+    
+     useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setIsLoggedIn(!!firebaseUser); // this converts the firebaseUser to a boolean means true, false
+    });
+
+    return () => unsubscribe();
+  }, []);
 
     const signUp = ({email,password}) => {
         console.log({email,password}, "userData in signup");
@@ -78,9 +88,8 @@ function AuthProvider({children}) {
             const errorMessage = error.message;
             const credential = GoogleAuthProvider.credentialFromError(error);
             console.log("Error while signing in with Google:", errorCode, errorMessage, credential);
-            setIsLoggedIn(false);
-            setUser(null);
-            
+           
+
             
         })
     };
