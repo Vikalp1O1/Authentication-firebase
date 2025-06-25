@@ -10,13 +10,33 @@ function AuthProvider({children}) {
     const googleProvider = new GoogleAuthProvider();
     const [user,setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoading,setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    const getUserToken = localStorage.getItem('userToken');
+    console.log('getUserToken from AuthProvider', getUserToken);
+    
     
      useEffect(() => {
+        setIsLoading(true);
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setIsLoggedIn(!!firebaseUser); // this converts the firebaseUser to a boolean means true, false
+             
+      setUser(firebaseUser); 
+      setIsLoggedIn(!!firebaseUser);
+
+        if(firebaseUser){
+            // console.log('user in auth state change', firebaseUser);
+            const storedUser = localStorage.setItem('userToken',firebaseUser.accessToken);
+        const getStoredUser = localStorage.getItem('userToken');
+        console.log('getStoredUser from re render', getStoredUser);
+    
+        }
+        else{
+
+            localStorage.removeItem('userToken');
+        }
+
+        setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -31,7 +51,9 @@ function AuthProvider({children}) {
                 const user = userCredential.user;
                 setUser(user);
                 setIsLoggedIn(true);
+                const storedUser = localStorage.setItem('userToken', user.accessToken);
                 toast.success('User created successfully and logged in');
+                
                 navigate('/');
                 console.log("User logged in:", user);
             })
@@ -57,10 +79,16 @@ function AuthProvider({children}) {
              setUser(user);
            setIsLoggedIn(true);
             toast.success('User logged in successfully');
+            
+            
+            const userToken = user.accessToken;
+            console.log('user after login token',userToken);
+             const storedUser = localStorage.setItem('userToken',userToken);
+             const getStoredData = localStorage.getItem('userToken');
+            console.log('getStoredData', getStoredData);
+                // console.log('storedUser', storedUser);
             navigate('/');
-            console.log("User log in", user);
-            console.log("is user Log in in AuthProvider:", isLoggedIn);
-
+            
         } catch (error) {
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -77,6 +105,7 @@ function AuthProvider({children}) {
             // it will give us a google access token , we can use it to use google Api
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
+            const storedUser = localStorage.setItem('userToken',token);
             // user information that is signed in
             const user = result.user;
             setUser(user);
@@ -98,6 +127,7 @@ function AuthProvider({children}) {
     const logout = () => {
         setUser(null);
         setIsLoggedIn(false);
+        localStorage.removeItem('userToken');
         toast.success('User logged out successfully');
         auth.signOut();
     };
@@ -105,7 +135,7 @@ function AuthProvider({children}) {
     console.log('user log in nh bgrtkmefmdiub',isLoggedIn);
     
   return (
-    <AuthContext.Provider value={{user,setUser,signUp,login,logout,isLoggedIn,setIsLoggedIn,signInWithGoogle}}>
+    <AuthContext.Provider value={{user,setUser,signUp,login,logout,isLoggedIn,setIsLoggedIn,signInWithGoogle,isLoading}}>
         {children}
     </AuthContext.Provider>
   )

@@ -35,27 +35,67 @@ function Signup() {
 
 
   return (
-    <div>
-    <h1 className='text-center text-4xl font-medium'>Firebase</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
       <form onSubmit={formik.handleSubmit}>
-        <div className='flex flex-col items-center justify-center w-96 mx-auto mt-10 border p-5 rounded-lg shadow-lg'>
-            <h2 className='text-2xl font-semibold mb-6'>Signup Form</h2>
-            <label htmlFor="email">Email:</label>
-            {formik.touched.email && formik.errors.email ? <span className='text-red-500'>{formik.errors.email}</span> : null}
-         
-            <input type="text" id='email' placeholder='Enter your email' className='border p-2 rounded-lg w-full mb-6' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email} />
-            
+        <div className="bg-white shadow-lg rounded-xl px-10 py-8 w-96">
+          <h1 className="text-3xl font-bold text-center text-indigo-600 mb-6">Firebase Auth</h1>
+          <h2 className="text-xl font-semibold text-gray-700 text-center mb-6">Signup Form</h2>
 
-            <label htmlFor="password">Password:</label>
-             {formik.touched.password && formik.errors.password ? <span className='text-red-500'> {formik.errors.password}</span> :null}
-          
-                 <input type="password" id='password' placeholder='Enter your password' className='border p-2 rounded-lg w-full mb-6' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.password} />
-             <button type='submit' className='bg-blue-500 text-white px-8 py-2.5 rounded-lg mt-2 mb-5'>Signup</button>
-            <GoogleButton  onClick={signInWithGoogle} ></GoogleButton>
-             <p>Already have an account? <a href="/login" className='text-blue-500 mt-8'>Login</a></p>
+          {/* Email Field */}
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+            <input
+              type="text"
+              id="email"
+              placeholder="Enter your email"
+              className="border border-gray-300 p-2 rounded-lg w-full focus:outline-indigo-400"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+            />
+            {formik.touched.email && formik.errors.email && (
+              <p className="text-sm text-red-500 mt-1">{formik.errors.email}</p>
+            )}
+          </div>
+
+          {/* Password Field */}
+          <div className="mb-6">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password:</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              className="border border-gray-300 p-2 rounded-lg w-full focus:outline-indigo-400"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+            />
+            {formik.touched.password && formik.errors.password && (
+              <p className="text-sm text-red-500 mt-1">{formik.errors.password}</p>
+            )}
+          </div>
+
+          {/* Signup Button */}
+          <button
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white w-full py-2.5 rounded-lg font-medium transition mb-4"
+          >
+            Signup
+          </button>
+
+          {/* Google Button */}
+          <div className="flex justify-center mb-4">
+            <GoogleButton onClick={signInWithGoogle} />
+          </div>
+
+          {/* Login Link */}
+          <p className="text-center text-sm text-gray-600">
+            Already have an account?{' '}
+            <a href="/login" className="text-indigo-500 hover:underline">Login</a>
+          </p>
         </div>
       </form>
-      </div>
+    </div>
     
   )
 }

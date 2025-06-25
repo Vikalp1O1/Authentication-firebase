@@ -3,6 +3,7 @@ import { createContext, useContext } from "react";
 export const AuthContext = createContext({
   user: null,
   isLoggedIn: false,
+  isLoading: false,
   signUp: () => {},
   login: () => {},
   signInWithGoogle: () => {},
