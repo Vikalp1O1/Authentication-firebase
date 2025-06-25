@@ -1,7 +1,7 @@
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import useAuth from '../store/authContext';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import GoogleButton from 'react-google-button'
 
 
@@ -11,16 +11,14 @@ import GoogleButton from 'react-google-button'
 
 
 
-
+// import { useState } from 'react';
 function Login() {
 
-  const navigate = useNavigate();
-  const getAccessToken = localStorage.getItem('userToken');
-// console.log('getAccessToken from Login', getAccessToken);
-if(getAccessToken){
-  navigate('/');
-}
+  const getAccessToken =  localStorage.getItem('userToken');
+  // console.log('getAccessToken from Login', getAccessToken);
+  if(getAccessToken)  return <Navigate to="/" replace />; // Redirect if user is already logged in
     const {user,login,isLoggedIn,signInWithGoogle} = useAuth();
+  const navigate = useNavigate();
     
     const formik = useFormik({
     initialValues: {
