@@ -1,15 +1,21 @@
 import  {  useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import useAuth from '../store/authContext';
 import GoogleButton from 'react-google-button'
+import { Navigate } from 'react-router-dom';
 
 
 function Signup() {
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
    const {user,signUp,signInWithGoogle}= useAuth();
+
+    const getAccessToken =  localStorage.getItem('userToken');
+
+    if(getAccessToken) return <Navigate to='/' replace />;
+    
 
     const formik = useFormik({
         initialValues: {
